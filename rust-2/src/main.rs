@@ -7,17 +7,30 @@ const SPACE: &str = " ";
 fn main() {
     let input = read_input("res/input.txt").expect("String inputfile was expected");
 
-    let safe_reports = input
+    let reports = &input
         .split(LINE_SEPARATOR)
         .map(|l| {
             l.split(SPACE)
                 .flat_map(|v| v.parse::<isize>())
                 .collect::<Vec<isize>>()
         })
+        .collect::<Vec<Vec<isize>>>();
+
+    let safe_reports = reports
+        .into_iter()
         .filter(|report| is_report_safe(report))
         .count();
 
+    let safe_reports_removing_any_level = reports
+        .into_iter()
+        .filter(|report| is_report_safe_removing_any_level(report))
+        .count();
+
     println!("The count of safe reports is {}", safe_reports);
+    println!(
+        "The count of safe reports removing any val is {}",
+        safe_reports_removing_any_level
+    );
 }
 
 fn read_input(path: &str) -> Result<String, io::Error> {
@@ -41,6 +54,20 @@ fn is_report_safe(report: &[isize]) -> bool {
                 });
         (increasing || decreasing) && in_range
     } else {
+        false
+    }
+}
+
+fn is_report_safe_removing_any_level(report: &[isize]) -> bool {
+    if is_report_safe(report) {
+        true
+    } else {
+        for i in 0..report.len() {
+            let without_i = [&report[0..i], &report[(i + 1)..]].concat();
+            if is_report_safe(&without_i) {
+                return true;
+            }
+        }
         false
     }
 }
