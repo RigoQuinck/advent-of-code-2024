@@ -25,9 +25,6 @@ fn main() {
     println!("The result obtained adding up all of the results of just the enabled multiplications is: {}", do_muls_sum);
 }
 
-// 184511516
-//  90044227
-
 fn read_input(path: &str) -> Result<String, io::Error> {
     let mut file = File::open(path)?;
     let mut content = String::new();
@@ -42,10 +39,8 @@ fn sum_mul(input: &str) -> Result<usize, regex::Error> {
         .captures_iter(input)
         .flat_map(|c| {
             let (_, [f1, f2]) = c.extract();
-            let f1 = f1.parse::<usize>().ok();
-            let f2 = f2.parse::<usize>().ok();
-            match (f1, f2) {
-                (Some(f1), Some(f2)) => Some(f1 * f2),
+            match (f1.parse::<usize>(), f2.parse::<usize>()) {
+                (Ok(f1), Ok(f2)) => Some(f1 * f2),
                 _ => None,
             }
         })
