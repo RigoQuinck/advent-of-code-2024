@@ -46,7 +46,7 @@ fn main() {
             visited_count += 1;
         }
 
-        let moved_guard = match dir {
+        let guard_in_matrix = match dir {
             Direction::Up if row > 0 => move_guard(&matrix, &guard, row - 1, col),
             Direction::Right => move_guard(&matrix, &guard, row, col + 1),
             Direction::Down => move_guard(&matrix, &guard, row + 1, col),
@@ -54,8 +54,8 @@ fn main() {
             _ => None,
         };
 
-        if let Some(moved_guard) = moved_guard {
-            guard = moved_guard;
+        if let Some(guard_in_matrix) = guard_in_matrix {
+            guard = guard_in_matrix;
         } else {
             in_matrix = false;
         }
